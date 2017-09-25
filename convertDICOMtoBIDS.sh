@@ -53,7 +53,10 @@ pathDCM2NIIX="/Applications/MRIcroGL/MRIcroGL.app/Contents/Resources/dcm2niix"
 ## Create BIDS folder structure
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+# Going to output folder
 cd ${OutputBIDS}
+
+# Create folders
 
 
 
