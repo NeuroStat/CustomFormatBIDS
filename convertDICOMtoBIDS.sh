@@ -25,7 +25,7 @@ RawData="/Volumes/1_5_TB_Han_HDD/BIDS_course/AllSub"
 OutputBIDS="/Volumes/1_5_TB_Han_HDD/BIDS_course/OutBIDS"
 
 # Number of subjects
-nsub=4
+nsub=1
 
 # Number of sessions per subject
 nsession=2
@@ -39,7 +39,7 @@ fi
 REST=TRUE
 DWI=FALSE
 
-# NAMESPACE: how do you call your folders?
+# NAMESPACE: how are your ORIGINAL folders called?
 # Leave empty if not available
 # Add between brackets if multiple names for multiple runs
 TASKNAME=("EP2D_FEAR_RUN1_0004" "EP2D_FEAR_RUN2_0005")
@@ -47,6 +47,9 @@ RESTNAME="EP2D_RESTING_STATE_"
 ANATNAME="T1_MPRAGE_0002"
 INHOMOGNAME="GRE_FIELD_MAPPING_0006"
 B0NAME="GRE_FIELD_MAPPING_0007"
+
+# How do you want your fMRI images to be called: TASK LABEL of OUTPUT
+TASKOUTLBL="FEAR"
 
 # NAMESPACE: pre-fix of your subject: without number
 prefsub='sub-'
@@ -58,6 +61,7 @@ CE=""           # CE stands for contrast ehanced images
 REC=""          # Can be used to distinguish different reconstruction algorithms
 RUN=""          # Index to denote scans of the same modality
 MODALITY=""     # Modality
+ECHO=""         # Echo for task MRI
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,18 +98,6 @@ function rename_files {
     done
   fi
 }
-
-
-# 
-# function rename_files {
-#   # BIDS key
-#   bkey=$2
-#   # Check whether first parameter is of zero-length
-#   if [ -n "$1" ] ; then   # If not so, rename
-#     echo 'test complete'
-#   fi
-# }
-
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,19 +273,28 @@ do
       "$pathDCM2NIIX" -ba y -z n -v y -o "$outSubFunc" ${TASKNAME[($sess - 1)]}
       # Go back to output folder and rename files to correct BIDS name structure
       cd "$outSubFunc"
-      mv *.json sub-"$sub"_ses-"$sess".json
-      mv *.nii sub-"$sub"_ses-"$sess".nii
+      mv *.json sub-"$sub"_ses-"$sess"_task-"$TASKOUTLBL".json
+      mv *.nii sub-"$sub"_ses-"$sess"_task-"$TASKOUTLBL".nii
       # Renaming extra info is sequential: add if parameters are supplied
       # ACQUISITION
       rename_files "$ACQUISITION" "acq"
-      # Renaming CE
-      rename_files "$CE" "ce"
       # Renaming REC
       rename_files "$RCE" "rce"
       # Renaming RUN
       rename_files "$RUN" "run"
-      # Renaming MODALITY
-      rename_files "$MODALITY" "mod"
+      # Renaming ECHO
+      rename_files "$ECHO" "echo"
+
+      # Add _bold to files
+      for f in *.json
+      do
+        mv $f "${f%.json}_bold.json"
+      done
+      for f in *.nii
+      do
+        mv $f "${f%.nii}_bold.nii"
+      done
+
     done
   # End of session, part 1 if statement
   fi
@@ -307,20 +308,34 @@ do
     "$pathDCM2NIIX" -ba y -z n -v y -o "$outSubFunc" ${TASKNAME[($sess - 1)]}
     # Go back to output folder and rename files to correct BIDS name structure
     cd "$outSubFunc"
-    mv *.json sub-"$sub".json
-    mv *.nii sub-"$sub".nii
+    mv *.json sub-"$sub"_task-"$TASKOUTLBL".json
+    mv *.nii sub-"$sub"_task-"$TASKOUTLBL".nii
 
     # Renaming extra info is sequential: add if parameters are supplied
     # ACQUISITION
     rename_files "$ACQUISITION" "acq"
-    # Renaming CE
-    rename_files "$CE" "ce"
     # Renaming REC
     rename_files "$RCE" "rce"
     # Renaming RUN
     rename_files "$RUN" "run"
-    # Renaming MODALITY
-    rename_files "$MODALITY" "mod"
+    # Renaming ECHO
+    rename_files "$ECHO" "echo"
+
+    # Add _bold to files
+    for f in *.json
+    do
+      mv $f "${f%.json}_bold.json"
+    done
+    for f in *.nii
+    do
+      mv $f "${f%.nii}_bold.nii"
+    done
+
   # End of session if statement
   fi
 done
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Convert
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
