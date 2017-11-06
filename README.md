@@ -8,7 +8,7 @@ The [convertDICOMtoBIDS](https://github.com/NeuroStat/CustomFormatBIDS/blob/mast
 Link to [BIDS information](http://bids.neuroimaging.io).
 
 ## Dependencies
-You will need [MRIcroGL](https://www.nitrc.org/frs/?group_id=889) to convert DICOM files to nii.
+You will need [MRIcroGL](https://www.nitrc.org/frs/?group_id=889) to convert DICOM files to nifti files.
 
 ## Tutorial
 
