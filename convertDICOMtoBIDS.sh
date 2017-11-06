@@ -25,7 +25,7 @@ RawData="/Volumes/1_5_TB_Han_HDD/BIDS_course/AllSub"
 OutputBIDS="/Volumes/1_5_TB_Han_HDD/BIDS_course/OutBIDS"
 
 # Number of subjects
-nsub=1
+nsub=4
 
 # Number of sessions per subject
 nsession=2
