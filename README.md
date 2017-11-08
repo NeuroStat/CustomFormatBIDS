@@ -15,5 +15,8 @@ You will need [MRIcroGL](https://www.nitrc.org/frs/?group_id=889) to convert DIC
 Will be added in the future.
 
 ## Bugs
-The scripts are still under development. Please report bugs. 
-Contact: Han.Bossier@Ugent.be 
+The scripts are still under development. Please report bugs at 
+https://github.com/NeuroStat/CustomFormatBIDS/issues
+
+## Contact
+Han.Bossier@Ugent.be 
