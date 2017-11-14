@@ -45,6 +45,7 @@ DWI=FALSE
 TASKNAME=("EP2D_FEAR_RUN1_0004" "EP2D_FEAR_RUN2_0005")
 RESTNAME="EP2D_RESTING_STATE_"
 ANATNAME="T1_MPRAGE_0002"
+
 INHOMOGNAME="GRE_FIELD_MAPPING_0006"
 B0NAME="GRE_FIELD_MAPPING_0007"
 
@@ -337,5 +338,5 @@ done
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-# Convert
+# Convert field map
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
