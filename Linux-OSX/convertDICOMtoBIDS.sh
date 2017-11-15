@@ -71,7 +71,8 @@ ECHO=""         # Echo for task MRI
 
 # Number of task names should match number of sessions
 if [ $nsession != ${#TASKNAME[@]} ] ; then
-  echo 'WARNING - NUMBER OF SESSIONS DOES NOT MATCH OF NUMER OF TASK NAMES'
+  echo 'ERROR - number of sessions does not match number of task names'
+  echo 'Terminating script'
   exit 314
 fi
 
@@ -145,12 +146,12 @@ done
 cat <<EOF > "$OutputBIDS"/dataset_description.json
 {
     "BIDSVersion": "1.0.2",
-    "License": "This dataset is made available under the Public Domain Dedication and License \nv1.0, whose full text can be found at \nhttp://www.opendatacommons.org/licenses/pddl/1.0/. \nWe hope that all users will follow the ODC Attribution/Share-Alike \nCommunity Norms (http://www.opendatacommons.org/norms/odc-by-sa/); \nin particular, while not legally required, we hope that all users \nof the data will acknowledge the OpenfMRI project and NSF Grant \nOCI-1131441 (R. Poldrack, PI) in any publications.",
+    "License": "This dataset is made available under the Public Domain Dedication and License \nv1.0, whose full text can be found at \nhttp://www.opendatacommons.org/licenses/pddl/1.0/. \nWe hope that all users will follow the ODC Attribution/Share-Alike \nCommunity Norms (http://www.opendatacommons.org/norms/odc-by-sa/); \nin particular, while not legally required, we hope that all users \nof the data will acknowledge the OpenfMRI project and NSF Grant \nOCI-1131441 (R. Poldrack, PI) in any   publications.",
     "Name": "Fear Task - FPPW",
-    "Authors": Wisniewski, David,
-    "Acknowledgements": who should be acknowledged in helping to collect the data,
-    "HowToAcknowledge": Instructions how researchers using this dataset should acknowledge the original authors.
-    "Funding": source of funding (grant numbers)
+    "Authors": ["1st author", "2nd author"],
+    "Acknowledgements": "who should be acknowledged in helping to collect the data",
+    "HowToAcknowledge": "Instructions how researchers using this dataset should acknowledge the original authors.",
+    "Funding": "source of funding (grant numbers)"
 }
 EOF
 
@@ -162,7 +163,7 @@ EOF
 
 # Create CHANGES
 cat <<EOF > "$OutputBIDS"/CHANGES.md
-Please provide additional changes here.
+Please add additional changes with dates and version numbers of dataset here [this line can be removed].
 
 1.0.0 $InitialDate
 

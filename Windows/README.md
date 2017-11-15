@@ -9,9 +9,9 @@ To run, first clone/download this repository. In the Windows PowerShell, you can
 git clone git@github.com:NeuroStat/CustomFormatBIDS.git
 ```
 
-You might need to adjust the [execution policy](https://ss64.com/ps/set-executionpolicy.html). To change the policy of your shell to Unrestricted, so that you can run any script downloaded from the internet, type:
+You might need to adjust the [execution policy](https://ss64.com/ps/set-executionpolicy.html). To change the policy of your shell to *Unrestricted*, so that you can run any script downloaded from the internet, type:
 ```
-Set-ExecutionPolicy Unrestricted
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 ````
 in the PowerShell.
 
@@ -30,3 +30,8 @@ Or, if you are in the directory where the script is saved, you can call it throu
 & "./convertDICOMtoBIDS.ps1"
 ```
 (don't forget the `&`).
+
+Note, for safety, one can restrict executions of *PowerShell* scripts again, after the script has been executed:
+```
+Set-ExecutionPolicy Restricted -Scope CurrentUser
+````
