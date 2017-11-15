@@ -15,13 +15,13 @@ Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 ````
 in the PowerShell.
 
-Now you need to open the file
+For the script to work, you need to specify some variables. To do so, you need to open the file:
 ```
-convertDICOMtoBIDS.ps1
+user_var.ps1
 ```
-in your text editor and edit the first part of the file. See also the Tutorial for this.
+in your text editor and follow the comments. See also the Tutorial section for this.
 
-Next save the script. The most common way to run PowerShell scripts is by directly calling them.
+Next save the document. Now we are ready to run the conversion script. This one is called *convertDICOMtoBIDS.ps1*. The most common way to run PowerShell scripts is by directly calling them.
 ```
 C:\> & "C:\Documents\CustomFormatBIDS/Windows\convertDICOMtoBIDS.ps1"
 ```
