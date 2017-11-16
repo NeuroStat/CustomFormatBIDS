@@ -19,6 +19,16 @@
 # Working directory of conversion script
 $ConvDir=$pwd
 
+# If experiment contains multiple sessions, then flag
+$SessFlag=$FALSE
+if ($nsession -gt 1) { $SessFlag=$TRUE }
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+## Warning message
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Write-Host "Please make sure you edit the user_EDIT.ps1 file."
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ## Checks
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -131,7 +141,7 @@ Out-File -FilePath $OutputBIDS\participants.tsv -InputObject $closeMessagePart -
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Convert anatomical files
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-$DEBUG=$TRUE
+$DEBUG=$FALSE
 if ($DEBUG -eq $FALSE) {
 
 # Convert the structural image for each subject (and possibly session)

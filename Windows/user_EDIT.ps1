@@ -12,12 +12,6 @@
 # Please, edit here your variables.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-## Warning message
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Write-Host "Please make sure you edit the user_EDIT.ps1 file."
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ## Global Variables specified by USER
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -35,9 +29,6 @@ $nsub=2
 
 # Number of sessions per subject
 $nsession=2
-# If this number > 1, then flag
-$SessFlag=$FALSE
-if ($nsession -gt 1) { $SessFlag=$TRUE }
 
 # Does your data contain resting state data (TRUE/FALSE) or DWI (TRUE/FALSE):
 $REST=$TRUE
