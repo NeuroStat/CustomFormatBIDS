@@ -131,6 +131,8 @@ Out-File -FilePath $OutputBIDS\participants.tsv -InputObject $closeMessagePart -
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Convert anatomical files
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$DEBUG=$TRUE
+if ($DEBUG -eq $FALSE) {
 
 # Convert the structural image for each subject (and possibly session)
 for($sub = 1; $sub -le $nsub; $sub++) {
@@ -173,7 +175,7 @@ for($sub = 1; $sub -le $nsub; $sub++) {
     # Convert using dcm2niix, pipe output to log.txt
     Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubAnat $ANATNAME" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
     # Go back to output folder and rename files to correct BIDS name structure
-    cd "$outSubAnat"
+    cd $outSubAnat
     # First retreive names, then pipe to rename command
     Get-ChildItem *.json | Rename-Item -NewName "sub-$sub.json"
     Get-ChildItem *.nii | Rename-Item -NewName "sub-$sub.nii"
@@ -193,12 +195,86 @@ for($sub = 1; $sub -le $nsub; $sub++) {
   }
 }
 
+}
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Convert functional files
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+# Convert the functional image for each subject (and possibly session)
+for($sub = 1; $sub -le $nsub; $sub++) {
+  # For loop over the sessions if needed
+  if ($SessFlag -eq $TRUE) {
+    for($sess = 1; $sess -le $nsession; $sess++) {
+      # Define the output folder
+      $outSubFunc="$OutputBIDS/sub-$sub/ses-$sess/func/"
+      # Go to subject's folder
+      cd $RawData/$prefsub$sub/
+      # Define session task name
+      $SessTASK=$TASKNAME[($sess - 1)]
 
+      # Convert using dcm2niix: take the correct task name provided by user, pipe output to log
+      Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+
+      # Go back to output folder and rename files to correct BIDS name structure
+      cd $outSubFunc
+      # First retreive names, then pipe to rename command
+      Get-ChildItem *.json | Rename-Item -NewName "sub-$sub`_ses-$sess`_task-$TASKOUTLBL.json"
+      Get-ChildItem *.nii | Rename-Item -NewName "sub-$sub`_ses-$sess`_task-$TASKOUTLBL.nii"
+
+      ## Renaming extra info is sequential: add if parameters are supplied
+      ## ACQUISITION
+      #rename_files "$ACQUISITION" "acq"
+      ## Renaming REC
+      #rename_files "$RCE" "rce"
+      ## Renaming RUN
+      #rename_files "$RUN" "run"
+      ## Renaming ECHO
+      #rename_files "$ECHO" "echo"
+
+      # Add _bold to all files (both .json and .nii)
+      # This is done by recursing over the files, then adding _bold to the basename, retaining the extension
+      Get-ChildItem $Path *.* -Recurse |
+        Rename-Item -NewName {$_.Basename + '_bold' + $_.Extension }
+    }
+  # End of session, part 1 if statement
+  }
+  # For loop without the sessions if needed
+  if ($SessFlag -eq $FALSE) {
+    # Define the output folder
+    $outSubFunc="$OutputBIDS/sub-$sub/func/"
+    # Go to subject's folder
+    cd $RawData/$prefsub$sub/
+    # Define session task name
+    $SessTASK=$TASKNAME[($sess - 1)]
+
+    # Convert using dcm2niix: take the correct task name provided by user, pipe output to log
+    Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+
+    # Go back to output folder and rename files to correct BIDS name structure
+    cd $outSubFunc
+    # First retreive names, then pipe to rename command
+    Get-ChildItem *.json | Rename-Item -NewName "sub-$sub`_task-$TASKOUTLBL.json"
+    Get-ChildItem *.nii | Rename-Item -NewName "sub-$sub`_task-$TASKOUTLBL.nii"
+
+    ## Renaming extra info is sequential: add if parameters are supplied
+    ## ACQUISITION
+    #rename_files "$ACQUISITION" "acq"
+    ## Renaming REC
+    #rename_files "$RCE" "rce"
+    ## Renaming RUN
+    #rename_files "$RUN" "run"
+    ## Renaming ECHO
+    #rename_files "$ECHO" "echo"
+
+    # Add _bold to all files (both .json and .nii)
+    # This is done by recursing over the files, then adding _bold to the basename, retaining the extension
+    Get-ChildItem $Path *.* -Recurse |
+      Rename-Item -NewName {$_.Basename + '_bold' + $_.Extension }
+
+  # End of session if statement
+  }
+}
 
 #%%%%%%%%%%%%%%%%%%
 ## Provide warnings
