@@ -30,23 +30,36 @@ if ($nsession -gt 1) { $SessFlag=$TRUE }
 Write-Host "Please make sure you edit the user_EDIT.ps1 file."
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+## Log files
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# Log files: the stdOutLog is a temp log file
+$bidsLog = "$RawData/DICOM2BIDS.log"
+$stdOutLog = "$RawData/stdOut.log"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ## Checks
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# Check whether system is Windows
-If ($IsWindows -eq $False) {
-  Write-Host 'WARNING - this script is written for Windows'
-}
-If ($IsWindows -eq $False) {
-  $WindowsMessage = "CONVERTING DICOM TO BIDS.
-Windows OS detected.
-The following contains info about your system and log of conversion to BIDS standard."
-Out-File -FilePath $RawData/logBIDS.txt -InputObject $WindowsMessage
+# Just logical for debugging while using OSX
+$debugOSX = $TRUE
+
+if($debugOSX -eq $FALSE){
+  # Check whether system is Windows
+  if ($IsWindows -eq $False) {
+    Write-Host 'ERROR - this script is written for Windows'
+    exit 112
+  }
+  If ($IsWindows -eq $True) {
+    $WindowsMessage = "CONVERTING DICOM TO BIDS.
+  Windows OS detected.
+  The following contains info about your system and log of conversion to BIDS standard."
+  Out-File -FilePath $bidsLog -InputObject $WindowsMessage
+  }
 }
 
-# Write system info and version of PowerShell to logBIDS.txt
-Start-Transcript -path $RawData/logBIDS.txt -append
-Out-File -FilePath $RawData/logBIDS.txt -InputObject $PSVersionTable.PSVersion -Append
+# Write system info (which contains version of PowerShell) to log file
+Start-Transcript -path $bidsLog -Append
 
 # Number of task names should match number of sessions
 if ($nsession -ne $TASKNAME.length) {
@@ -55,12 +68,19 @@ if ($nsession -ne $TASKNAME.length) {
   exit 314
 }
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-## Global variables
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Check whether we have dcm2niix installed
+if (-Not (Get-Command $pathDCM2NIIX -errorAction SilentlyContinue)) {
+  Write-Host "dcm2niix is not found, please provide the correct path in user_EDIT.ps1"
+  exit 111
+}
 
-# Point to dcm2niix
-$pathDCM2NIIX="/Applications/MRIcroGL/MRIcroGL.app/Contents/Resources/dcm2niix"
+# Write user parameters to log
+$ParamMessage="**********************
+Parameters inputted by user:
+"
+Out-File -FilePath $bidsLog -InputObject $ParamMessage -Append
+Get-Variable -Scope Local | Out-File -FilePath $bidsLog -Append
+
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,8 +173,9 @@ for($sub = 1; $sub -le $nsub; $sub++) {
       $outSubAnat="$OutputBIDS/sub-$sub/ses-$sess/anat/"
       # Go to subject's folder
       cd $RawData/$prefsub$sub/
-      # Convert using dcm2niix, pipe output to logBIDS.txt
-      Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubAnat $ANATNAME" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+      # Convert using dcm2niix, pipe output to log file
+      Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubAnat $ANATNAME" -Wait -RedirectStandardOutput $stdOutLog
+      Get-Content $stdOutLog | Out-File $bidsLog -Append
       # Go back to output folder and rename files to correct BIDS name structure
       cd $outSubAnat
       # Rename files to correct BIDS name structure.
@@ -182,8 +203,9 @@ for($sub = 1; $sub -le $nsub; $sub++) {
     $outSubAnat="$OutputBIDS/sub-$sub/anat/"
     # Go to subject's folder
     cd $RawData/$prefsub$sub/
-    # Convert using dcm2niix, pipe output to log.txt
-    Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubAnat $ANATNAME" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+    # Convert using dcm2niix, pipe output to log
+    Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubAnat $ANATNAME" -Wait -RedirectStandardOutput $stdOutLog
+    Get-Content $stdOutLog | Out-File $bidsLog -Append
     # Go back to output folder and rename files to correct BIDS name structure
     cd $outSubAnat
     # First retreive names, then pipe to rename command
@@ -205,7 +227,7 @@ for($sub = 1; $sub -le $nsub; $sub++) {
   }
 }
 
-}
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Convert functional files
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,7 +246,8 @@ for($sub = 1; $sub -le $nsub; $sub++) {
       $SessTASK=$TASKNAME[($sess - 1)]
 
       # Convert using dcm2niix: take the correct task name provided by user, pipe output to log
-      Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+      Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $stdOutLog
+      Get-Content $stdOutLog | Out-File $bidsLog -Append
 
       # Go back to output folder and rename files to correct BIDS name structure
       cd $outSubFunc
@@ -259,7 +282,8 @@ for($sub = 1; $sub -le $nsub; $sub++) {
     $SessTASK=$TASKNAME[($sess - 1)]
 
     # Convert using dcm2niix: take the correct task name provided by user, pipe output to log
-    Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $RawData/logBIDS.txt
+    Start-Process -FilePath $pathDCM2NIIX -ArgumentList "-ba y -z n -v y -o $outSubFunc $SessTASK" -Wait -RedirectStandardOutput $stdOutLog
+    Get-Content $stdOutLog | Out-File $bidsLog -Append
 
     # Go back to output folder and rename files to correct BIDS name structure
     cd $outSubFunc
@@ -284,6 +308,9 @@ for($sub = 1; $sub -le $nsub; $sub++) {
 
   # End of session if statement
   }
+}
+
+# Debug bracket
 }
 
 #%%%%%%%%%%%%%%%%%%

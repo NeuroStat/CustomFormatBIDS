@@ -12,6 +12,14 @@
 # Please, edit here your variables.
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+## Location of MRIcroGL progam
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# Path to dcm2niix: give the path to Location of dcm2niix program (part of MRIcroGL).
+# Eg: "C:\Programs\dcm2niix"
+$pathDCM2NIIX="/Applications/MRIcroGL/MRIcroGL.app/Contents/Resources/dcm2niix"
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ## Global Variables specified by USER
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
