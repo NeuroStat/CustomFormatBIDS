@@ -32,7 +32,7 @@ Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 ````
 in the PowerShell.
 
-## Give information
+## Provide information
 
 For the script to work, you need to specify some variables. To do so, you need to open the file:
 ```
