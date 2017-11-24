@@ -27,10 +27,10 @@ $pathDCM2NIIX="/Applications/MRIcroGL/MRIcroGL.app/Contents/Resources/dcm2niix"
 $InitialDate="2017-11-06"
 
 # Location of raw data folder, containing subjects in different folders
-$RawData="/Volumes/1_5_TB_Han_HDD/BIDS_course/AllSub"
+$RawData="/Users/hanbossier/Desktop/AllSub"
 
 # Location of BIDS output
-$OutputBIDS="/Volumes/1_5_TB_Han_HDD/BIDS_course/OutBIDS"
+$OutputBIDS="/Users/hanbossier/Desktop/DemonstrationBIDS/OutBIDS"
 
 # Number of subjects
 $nsub=2
