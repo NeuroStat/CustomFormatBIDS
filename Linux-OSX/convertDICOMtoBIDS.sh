@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ####################
 #### TITLE:  Convert DICOM to BIDS format @FPPW.
@@ -31,7 +31,7 @@ nsub=4
 nsession=2
 # If this number > 1, then flag
 SessFlag=FALSE
-if [ $nsession > 1 ] ; then
+if [ $nsession -gt 1 ] ; then
   SessFlag=TRUE
 fi
 
