@@ -19,10 +19,10 @@
 InitialDate="2018-01-17"
 
 # Location of raw data folder, containing subjects in different folders
-RawData="/home/hannelore/Documents/BIDS/mydicom"
+RawData="/Volumes/1_5_TB_Han_HDD/BIDS_course/AllSub"
 
 # Location of BIDS output
-OutputBIDS="/home/hannelore/Documents/BIDS/mybids"
+OutputBIDS="/Volumes/1_5_TB_Han_HDD/BIDS_course/OutBIDS"
 
 # Number of subjects
 nsub=$(ls $RawData | wc -l)
@@ -66,14 +66,29 @@ subID[34]="PAT28"
 subID[35]="PAT29"
 subID[36]="PAT31"
 
+# Number of sessions per subject
+nsession=2
+# If this number > 1, then flag
+SessFlag=FALSE
+if [ $nsession > 1 ] ; then
+  SessFlag=TRUE
+fi
+
+# Does your data contain resting state data (TRUE/FALSE) or DWI (TRUE/FALSE):
+REST=TRUE
+DWI=FALSE
 
 # NAMESPACE: how are your ORIGINAL folders called?
 # Leave empty if not available
 # Add between brackets if multiple names for multiple runs
+TASKNAME=""
 ANATNAME="T1"
 RESTNAME="fMRI"
 DWINAME="DWI"
 DWIPANAME="DWI_PA"
+
+INHOMOGNAME="GRE_FIELD_MAPPING_0006"
+B0NAME="GRE_FIELD_MAPPING_0007"
 
 
 # NAMESPACE: some labels with info
@@ -86,6 +101,18 @@ MODALITY=""     # Modality
 ECHO=""         # Echo for task MRI
 
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+## Checks
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# Check doesn't work at the moment as not all users have task names...
+
+# # Number of task names should match number of sessions
+# if [ $nsession != ${#TASKNAME[@]} ] ; then
+#   echo 'ERROR - number of sessions does not match number of task names'
+#   echo 'Terminating script'
+#   exit 314
+# fi
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ## Custom functions
@@ -117,7 +144,7 @@ function rename_files {
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # to Path dcm2niix
-pathDCM2NIIX="/home/hannelore/Programs/dcm2niix/build/bin/dcm2niix"
+pathDCM2NIIX="/Applications/MRIcroGL/MRIcroGL.app/Contents/Resources/dcm2niix"
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,12 +173,12 @@ done
 cat <<EOF > "$OutputBIDS"/dataset_description.json
 {
     "BIDSVersion": "1.0.2",
-    "License": "This dataset is made available under the Public Domain Dedication and License \nv1.0, whose full text can be found at \nhttp://www.opendatacommons.org/licenses/pddl/1.0/. \nWe hope that all users will follow the ODC Attribution/Share-Alike \nCommunity Norms (http://www.opendatacommons.org/norms/odc-by-sa/); \nin particular, while not legally required, we hope that all users \nof the data will acknowledge the OpenfMRI project and NSF Grant \nOCI-1131441 (R. Poldrack, PI) in any publications.",
-    "Name": "Brain Tumor Connectomics - FPPW",
-    "Authors": ["Hannelore Aerts", "Daniele Marinazzo"],
-    "Acknowledgements": "Data acquisition was funded by ..."
+    "License": "This dataset is made available under the Public Domain Dedication and License \nv1.0, whose full text can be found at \nhttp://www.opendatacommons.org/licenses/pddl/1.0/. \nWe hope that all users will follow the ODC Attribution/Share-Alike \nCommunity Norms (http://www.opendatacommons.org/norms/odc-by-sa/); \nin particular, while not legally required, we hope that all users \nof the data will acknowledge the OpenfMRI project and NSF Grant \nOCI-1131441 (R. Poldrack, PI) in any   publications.",
+    "Name": "Fear Task - FPPW",
+    "Authors": ["1st author", "2nd author"],
+    "Acknowledgements": "who should be acknowledged in helping to collect the data",
     "HowToAcknowledge": "Instructions how researchers using this dataset should acknowledge the original authors.",
-    "Funding": "BOF (grant numbers)"
+    "Funding": "source of funding (grant numbers)"
 }
 EOF
 
@@ -324,4 +351,3 @@ do
   # Renaming ECHO
   rename_files "$ECHO" "echo"
 done
-
