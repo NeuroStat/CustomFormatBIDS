@@ -43,3 +43,10 @@ Then save, and run the script using:
 ./convertDICOMtoBIDS.sh
 ```
 in your terminal.
+
+
+# DWI conversion
+
+There is a separate branch called _DWI_, which contains work by Hannelore to convert DWI images.
+This code can also be used as an example since it uses a more list-wise approach to convert all subjects.
+Branch at: https://github.com/NeuroStat/CustomFormatBIDS/tree/DWI/Linux-OSX
