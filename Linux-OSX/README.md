@@ -25,7 +25,7 @@ Three commands are important to navigate in the shell. These are used to show th
 To run the scripts, you first need to clone/download this repository.
 If you have Git installed on your machine, you can type in your **terminal**:
 ```
-git clone git@github.com:NeuroStat/CustomFormatBIDS.git
+git clone https://github.com/NeuroStat/CustomFormatBIDS.git
 ```
 Note that this will clone the entire repository (so also the Windows part, which you can ignore). Otherwise, go to the [main page](https://github.com/NeuroStat/CustomFormatBIDS) and click on *Clone/Download* --> *Download ZIP*.
 
